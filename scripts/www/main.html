@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>汗液物质检测系统 - 山东理工大学</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-blue: #0056a6;
+            --primary-dark: #003d75;
+            --primary-light: #3a7ca5;
+            --accent-teal: #1a9aa0;
+            --accent-orange: #f6a71d;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #6c757d;
+            --text-dark: #333333;
+            --text-light: #777777;
+            --white: #ffffff;
+            --shadow-light: rgba(0, 86, 166, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--text-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* 头部样式 - 左校右院 */
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 4px solid var(--accent-orange);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            max-width: 45%;
+        }
+
+        .logo-img {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            object-fit: contain;
+            background-color: white;
+            padding: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-img img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-main {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-sub {
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .right-logo {
+            text-align: right;
+        }
+
+        /* 主内容区 */
+        .main-container {
+            flex: 1;
+            padding: 24px 20px;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* 主界面样式 */
+        .main-interface {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page-title {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--accent-teal);
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-title i {
+            color: var(--accent-teal);
+            background: var(--light-gray);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .page-subtitle {
+            color: var(--text-light);
+            margin-bottom: 28px;
+            font-size: 16px;
+            line-height: 1.6;
+            background: var(--white);
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px var(--shadow-light);
+            border-left: 4px solid var(--accent-teal);
+        }
+
+        .detection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .detection-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 24px 16px;
+            box-shadow: 0 6px 15px var(--shadow-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid var(--medium-gray);
+            position: relative;
+            overflow: hidden;
+            height: 170px;
+            justify-content: center;
+        }
+
+        .detection-card:active {
+            transform: scale(0.97);
+            box-shadow: 0 3px 8px var(--shadow-light);
+        }
+
+        .detection-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-teal), var(--primary-light));
+        }
+
+        .detection-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 26px;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .glucose-icon {
+            background: linear-gradient(135deg, #2d9d7a, #4caf93);
+        }
+
+        .lactate-icon {
+            background: linear-gradient(135deg, #3a7ca5, #5d9bc5);
+        }
+
+        .sodium-icon {
+            background: linear-gradient(135deg, #0056a6, #3a7ca5);
+        }
+
+        .potassium-icon {
+            background: linear-gradient(135deg, #9c27b0, #ba68c8);
+        }
+
+        .chloride-icon {
+            background: linear-gradient(135deg, #ff9800, #ffb74d);
+        }
+
+        .upload-icon {
+            background: linear-gradient(135deg, #e53935, #f44336);
+        }
+
+        .cookie-icon {
+            background: linear-gradient(135deg, #43a047, #66bb6a);
+        }
+
+        .detection-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        /* 子界面样式 */
+        .sub-interface {
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+
+        .sub-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .back-button {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 86, 166, 0.2);
+            font-weight: 600;
+        }
+
+        .back-button:active {
+            transform: translateX(-3px);
+            background: var(--primary-dark);
+        }
+
+        /* 数据展示框 */
+        .data-display-box {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            margin-top: 20px;
+            border: 1px solid var(--medium-gray);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-display-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal));
+        }
+
+        .data-icon {
+            font-size: 70px;
+            color: var(--primary-light);
+            margin-bottom: 24px;
+            opacity: 0.8;
+        }
+
+        .data-message {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .data-hint {
+            font-size: 15px;
+            color: var(--text-light);
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        /* 上传页面 & Cookie编辑页面 扩展样式 */
+        .embed-container {
+            width: 100%;
+            height: 400px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px var(--shadow-light);
+        }
+
+        .embed-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .cookie-edit-box {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .cookie-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 16px 20px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 12px;
+            font-size: 16px;
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .cookie-input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 86, 166, 0.1);
+        }
+
+        .save-button {
+            background: var(--accent-teal);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(26, 154, 160, 0.2);
+        }
+
+        .save-button:active {
+            transform: scale(0.96);
+            background: #158085;
+        }
+
+        .hint-success {
+            color: #43a047;
+            font-size: 15px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .hint-error {
+            color: #e53935;
+            font-size: 15px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* 页脚 */
+        .footer {
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+            margin-top: 30px;
+            line-height: 1.5;
+        }
+
+        /* IP显示区域 */
+        .ip-display {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 300px;
+        }
+
+        .ip-display i {
+            color: var(--accent-orange);
+            font-size: 14px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .detection-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .main-container {
+                padding: 20px 16px;
+            }
+
+            .header {
+                padding: 16px 20px;
+            }
+
+            .logo-main {
+                font-size: 18px;
+            }
+
+            .logo-img {
+                width: 48px;
+                height: 48px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .ip-display {
+                bottom: 70px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                justify-content: center;
+            }
+
+            .embed-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .detection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-main {
+                font-size: 16px;
+            }
+
+            .logo-section {
+                gap: 12px;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .detection-card {
+            animation: fadeIn 0.3s ease forwards;
+            animation-delay: calc(var(--order) * 0.05s);
+        }
+
+        /* 防止长按选中文本 */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* 允许输入框选中文本 */
+        .cookie-input {
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 头部区域：左校右院 -->
+    <div class="header">
+        <!-- 左侧：山东理工大学 -->
+        <div class="logo-section">
+            <div class="logo-img">
+                <!-- FIX: 使用在线占位图片替代本地图片，避免404错误 -->
+                <img src="https://via.placeholder.com/56x56/0056a6/ffffff?text=山" alt="山东理工大学校徽" onerror="this.style.display='none'">
+            </div>
+            <div class="logo-text">
+                <div class="logo-main">山东理工大学</div>
+                <div class="logo-sub">Shandong University of Technology</div>
+            </div>
+        </div>
+
+        <!-- 右侧：机械工程学院 -->
+        <div class="logo-section right-logo">
+            <div class="logo-text">
+                <div class="logo-main">机械工程学院</div>
+                <div class="logo-sub">School of Mechanical Engineering</div>
+            </div>
+            <div class="logo-img">
+                <!-- FIX: 使用在线占位图片替代本地图片，避免404错误 -->
+                <img src="https://via.placeholder.com/56x56/003d75/ffffff?text=机" alt="机械工程学院院徽" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-container">
+        <!-- 主界面 -->
+        <div id="main-interface" class="main-interface">
+            <h1 class="page-title"><i class="fas fa-tint"></i> 汗液物质检测系统</h1>
+            <p class="page-subtitle">本系统用于实时监测汗液中的关键物质浓度，为健康管理提供数据参考。点击下方检测项目查看详情。</p>
+
+            <div class="detection-grid">
+                <!-- 原有检测卡片 -->
+                <div class="detection-card" data-target="glucose" style="--order: 1">
+                    <div class="detection-icon glucose-icon">
+                        <i class="fas fa-syringe"></i>
+                    </div>
+                    <h3 class="detection-name">葡萄糖检测</h3>
+                    <p class="detection-desc">浓度监测</p>
+                </div>
+                <div class="detection-card" data-target="lactate" style="--order: 2">
+                    <div class="detection-icon lactate-icon">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <h3 class="detection-name">乳酸检测</h3>
+                    <p class="detection-desc">浓度监测</p>
+                </div>
+                <div class="detection-card" data-target="sodium" style="--order: 3">
+                    <div class="detection-icon sodium-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3 class="detection-name">钠离子检测</h3>
+                    <p class="detection-desc">浓度监测</p>
+                </div>
+                <div class="detection-card" data-target="potassium" style="--order: 4">
+                    <div class="detection-icon potassium-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3 class="detection-name">钾离子检测</h3>
+                    <p class="detection-desc">浓度监测</p>
+                </div>
+                <div class="detection-card" data-target="chloride" style="--order: 5">
+                    <div class="detection-icon chloride-icon">
+                        <i class="fas fa-lungs"></i>
+                    </div>
+                    <h3 class="detection-name">氯离子检测</h3>
+                    <p class="detection-desc">浓度监测</p>
+                </div>
+                <!-- 新增：外部网站嵌入上传页面 -->
+                <div class="detection-card" data-target="upload" style="--order: 6">
+                    <div class="detection-icon upload-icon">
+                        <i class="fas fa-external-link-alt"></i>
+                    </div>
+                    <h3 class="detection-name">外部网站嵌入</h3>
+                    <p class="detection-desc">上传/展示</p>
+                </div>
+                <!-- 新增：Cookie编辑页面 -->
+                <div class="detection-card" data-target="cookie" style="--order: 7">
+                    <div class="detection-icon cookie-icon">
+                        <i class="fas fa-cookie"></i>
+                    </div>
+                    <h3 class="detection-name">Cookie编辑</h3>
+                    <p class="detection-desc">网址管理</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 原有子界面：葡萄糖/乳酸/钠离子/钾离子/氯离子（保持不变） -->
+        <div id="glucose-interface" class="sub-interface">
+            <div class="sub-header">
+                <h1 class="page-title"><i class="fas fa-syringe"></i> 葡萄糖浓度检测</h1>
+                <button class="back-button" data-back="main"><i class="fas fa-arrow-left"></i> 返回主界面</button>
+            </div>
+            <!--div class="data-display-box">
+                <div class="data-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="data-message">葡萄糖检测数据将在此显示</div>
+                <p class="data-hint">检测模块准备就绪，数据采集完成后将实时显示检测结果。</p>
+            </div-->
+            <div class="embed-container">
+                <iframe class="detection-iframe" src=""></iframe>
+            </div>
+        </div>
+        <div id="lactate-interface" class="sub-interface">
+            <div class="sub-header">
+                <h1 class="page-title"><i class="fas fa-running"></i> 乳酸浓度检测</h1>
+                <button class="back-button" data-back="main"><i class="fas fa-arrow-left"></i> 返回主界面</button>
+            </div>
+            <!--div class="data-display-box">
+                <div class="data-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="data-message">乳酸检测数据将在此显示</div>
+                <p class="data-hint">检测模块准备就绪，数据采集完成后将实时显示检测结果。</p>
+            </div-->
+            <div class="embed-container">
+                <iframe class="detection-iframe" src=""></iframe>
+            </div>
+        </div>
+        <div id="sodium-interface" class="sub-interface">
+            <div class="sub-header">
+                <h1 class="page-title"><i class="fas fa-vial"></i> 钠离子浓度检测</h1>
+                <button class="back-button" data-back="main"><i class="fas fa-arrow-left"></i> 返回主界面</button>
+            </div>
+            <!--div class="data-display-box">
+                <div class="data-icon">
+                    <i class="fas fa-chart-area"></i>
+                </div>
+                <div class="data-message">钠离子检测数据将在此显示</div>
+                <p class="data-hint">检测模块准备就绪，数据采集完成后将实时显示检测结果。</p>
+            </div-->
+            <div class="embed-container">
+                <iframe class="detection-iframe" src=""></iframe>
+            </div>
+        </div>
+        <div id="potassium-interface" class="sub-interface">
+            <div class="sub-header">
+                <h1 class="page-title"><i class="fas fa-heartbeat"></i> 钾离子浓度检测</h1>
+                <button class="back-button" data-back="main"><i class="fas fa-arrow-left"></i> 返回主界面</button>
+            </div>
+            <!--div class="data-display-box">
+                <div class="data-icon">
+                    <i class="fas fa-wave-square"></i>
+                </div>
+                <div class="data-message">钾离子检测数据将在此显示</div>
+                <p class="data-hint">检测模块准备就绪，数据采集完成后将实时显示检测结果。</p>
+            </div-->
+            <div class="embed-container">
+                <iframe class="detection-iframe" src=""></iframe>
+            </div>
+        </div>
+        <div id="chloride-interface" class="sub-interface">
+            <div class="sub-header">
+                <h1 class="page-title"><i class="fas fa-lungs"></i> 氯离子浓度检测</h1>
+                <button class="back-button" data-back="main"><i class="fas fa-arrow-left"></i> 返回主界面</button>
+            </div>
+            <!--div class="data-display-box">
+                <div class="data-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="data-message">氯离子检测数据将在此显示</div>
+                <p class="data-hint">检测模块准备就绪，数据采集完成后将实时显示检测结果。</p>
+            </div-->
+            <div class="embed-container">
+                <iframe class="detection-iframe" src=""></iframe>
+            </div>
+        </div>
+
+        <!-- 新增：外部网站嵌入上传页面 -->
+        <div id="upload-interface" class="sub-interface">
+            <div class="sub-header">
+                <h1 class="page-title"><i class="fas fa-external-link-alt"></i> 外部网站嵌入</h1>
+                <button class="back-button" data-back="main"><i class="fas fa-arrow-left"></i> 返回主界面</button>
+            </div>
+            <div class="data-display-box">
+                <div class="data-message">外部网站展示区域</div>
+                <p class="data-hint">下方容器将展示从Cookie读取的外部网站内容，可在Cookie编辑页面修改网址</p>
+                <!-- 外部网站嵌入容器 -->
+                <div class="embed-container">
+                    <iframe id="external-iframe" src=""></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增：Cookie编辑页面 -->
+        <div id="cookie-interface" class="sub-interface">
+            <div class="sub-header">
+                <h1 class="page-title"><i class="fas fa-cookie"></i> Cookie编辑（外部网站地址）</h1>
+                <button class="back-button" data-back="main"><i class="fas fa-arrow-left"></i> 返回主界面</button>
+            </div>
+            <div class="data-display-box">
+                <div class="data-message">编辑外部网站地址</div>
+                <p class="data-hint">输入需要嵌入的外部网站完整URL（如：https://www.example.com），保存后将同步到嵌入页面</p>
+                <!-- Cookie编辑区域 -->
+                <div class="cookie-edit-box">
+                    <input type="text" id="cookie-url-input" class="cookie-input" placeholder="请输入外部网站完整URL...">
+                    <button class="save-button" id="save-cookie-btn">保存网址</button>
+                    <div class="hint-success" id="success-hint">✅ 网址保存成功！</div>
+                    <div class="hint-error" id="error-hint">❌ 请输入有效的URL（需包含http/https）！</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+        <p>山东理工大学机械工程学院 汗液物质检测系统</p>
+        <p>© 2023 智能检测实验室 版本 1.0</p>
+    </div>
+
+    <!-- IP显示区域 -->
+    <div id="ip-display" class="ip-display">
+        <i class="fas fa-map-marker-alt"></i>
+        <span id="ip-address">山东理工大学机械工程学院</span>
+    </div>
+
+    <script>
+        // 定义检测类型与参数的映射关系
+        const detectionParams = {
+            'glucose': 'type=glucose',
+            'lactate': 'type=lactate',
+            'sodium': 'type=sodium',
+            'potassium': 'type=potassium',
+            'chloride': 'type=chloride'
+        };
+        
+        // 设置cookie存储IP信息
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        // 获取cookie值
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        // 设置IP地址为山东理工大学机械工程学院
+        function setupIP() {
+            const savedIP = getCookie('user_ip');
+            if (!savedIP) {
+                setCookie('user_ip', '山东理工大学机械工程学院', 30);
+            }
+            document.getElementById('ip-address').textContent = savedIP || '山东理工大学机械工程学院';
+        }
+
+        // 界面切换功能
+        function showInterface(interfaceId) {
+            document.querySelectorAll('.main-interface, .sub-interface').forEach(el => {
+                el.style.display = 'none';
+            });
+            const targetInterface = document.getElementById(interfaceId);
+            if (targetInterface) {
+                targetInterface.style.display = 'block';
+            }
+
+            // 切换到上传页面时，加载Cookie中的外部网站地址
+            if (interfaceId === 'upload-interface') {
+                loadExternalWebsite();
+            }
+            
+            // 切换到检测页面时，加载对应的外部网站（带参数）
+            if (interfaceId.endsWith('-interface') && interfaceId !== 'upload-interface' && interfaceId !== 'cookie-interface') {
+                loadDetectionWebsite(interfaceId);
+            }
+
+            // 切换到Cookie编辑页面时，加载当前保存的URL
+            if (interfaceId === 'cookie-interface') {
+                const savedUrl = getCookie('external_website_url') || '';
+                document.getElementById('cookie-url-input').value = savedUrl;
+                // 隐藏提示
+                document.getElementById('success-hint').style.display = 'none';
+                document.getElementById('error-hint').style.display = 'none';
+            }
+        }
+
+        // 加载外部网站到iframe（从Cookie读取）
+        function loadExternalWebsite() {
+            const iframe = document.getElementById('external-iframe');
+            const savedUrl = getCookie('external_website_url');
+            
+            if (iframe && savedUrl && isValidUrl(savedUrl)) {
+                iframe.src = savedUrl;
+            } else if (iframe) {
+                // FIX: 使用srcdoc替代contentDocument.write，避免异步写入错误
+                iframe.srcdoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    </head>
+                    <body style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; height: 100%; margin: 0;">
+                        <div style="color: #6c757d; font-size: 16px; text-align: center;">
+                            <i class="fas fa-exclamation-circle" style="font-size: 32px; margin-bottom: 16px; display: block;"></i>
+                            暂无有效外部网站地址<br>
+                            请在「Cookie编辑」页面设置URL
+                        </div>
+                    </body>
+                    </html>
+                `;
+            }
+        }
+        
+        // 新增：加载检测页面的外部网站
+        function loadDetectionWebsite(interfaceId) {
+            const iframe = document.querySelector(`#${interfaceId} .detection-iframe`);
+            const savedUrl = getCookie('external_website_url');
+            
+            if (iframe && savedUrl && isValidUrl(savedUrl)) {
+                const baseUrl = savedUrl.split('?')[0];
+                const detectionType = interfaceId.replace('-interface', '');
+                const newUrl = `${baseUrl}?${detectionParams[detectionType]}`;
+                iframe.src = newUrl;
+            } else if (iframe) {
+                // FIX: 使用srcdoc替代contentDocument.write，避免异步写入错误
+                iframe.srcdoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    </head>
+                    <body style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; height: 100%; margin: 0;">
+                        <div style="color: #6c757d; font-size: 16px; text-align: center;">
+                            <i class="fas fa-exclamation-circle" style="font-size: 32px; margin-bottom: 16px; display: block;"></i>
+                            暂无有效外部网站地址<br>
+                            请在「Cookie编辑」页面设置URL
+                        </div>
+                    </body>
+                    </html>
+                `;
+            }
+        }
+
+        // 验证URL有效性
+        function isValidUrl(url) {
+            try {
+                new URL(url);
+                return url.startsWith('http://') || url.startsWith('https://');
+            } catch (e) {
+                return false;
+            }
+        }
+        
+        // 保存Cookie网址
+        function saveCookieUrl() {
+            const urlInput = document.getElementById('cookie-url-input');
+            const url = urlInput.value.trim();
+            const successHint = document.getElementById('success-hint');
+            const errorHint = document.getElementById('error-hint');
+
+            // 隐藏所有提示
+            successHint.style.display = 'none';
+            errorHint.style.display = 'none';
+
+            // 验证URL
+            if (!isValidUrl(url)) {
+                errorHint.style.display = 'block';
+                return;
+            }
+
+            // 保存到Cookie（有效期30天）
+            setCookie('external_website_url', url, 30);
+            successHint.style.display = 'block';
+
+            // 3秒后隐藏成功提示
+            setTimeout(() => {
+                successHint.style.display = 'none';
+            }, 3000);
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function () {
+            setupIP();
+            showInterface('main-interface');
+            
+            // 为检测卡片添加点击事件
+            document.querySelectorAll('.detection-card').forEach(function(card) {
+                card.addEventListener('click', function () {
+                    const targetId = this.getAttribute('data-target') + '-interface';
+                    showInterface(targetId);
+                    this.style.transform = 'scale(0.97)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            // 为返回按钮添加点击事件
+            document.querySelectorAll('.back-button').forEach(function(button) {
+                button.addEventListener('click', function () {
+                    const targetId = this.getAttribute('data-back') + '-interface';
+                    showInterface(targetId);
+                    this.style.transform = 'translateX(-3px)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            // 绑定Cookie保存按钮事件
+            document.getElementById('save-cookie-btn').addEventListener('click', saveCookieUrl);
+            
+            // 防止双击缩放
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        });
+    </script>
+</body>
+</html>
