@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL参数展示页面</title>
+    <style>
+        /* 基础样式，让页面更美观 */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .param-container {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .param-item {
+            font-size: 18px;
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #fff;
+            border-radius: 4px;
+        }
+        .no-params {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="param-container">
+        <h2>URL传入的参数：</h2>
+        <div id="param-display"></div>
+    </div>
+
+    <script>
+        // 核心函数：解析URL查询参数
+        function getUrlParams() {
+            // 1. 获取URL中?后面的查询字符串（例如?a=b&c=123会得到"a=b&c=123"）
+            const searchParams = new URLSearchParams(window.location.search);
+            const params = {};
+
+            // 2. 遍历所有参数，转换成键值对对象
+            for (const [key, value] of searchParams.entries()) {
+                // 解码参数值（处理中文/特殊字符编码问题）
+                params[key] = decodeURIComponent(value);
+            }
+            return params;
+        }
+
+        // 函数：将参数渲染到页面
+        function renderParams() {
+            const params = getUrlParams();
+            const displayElement = document.getElementById('param-display');
+            
+            // 3. 判断是否有参数
+            if (Object.keys(params).length === 0) {
+                displayElement.innerHTML = '<div class="no-params">暂无传入的URL参数</div>';
+                return;
+            }
+
+            // 4. 遍历参数并生成展示内容
+            let paramHtml = '';
+            for (const key in params) {
+                paramHtml += `<div class="param-item"><strong>${key}</strong> = ${params[key]}</div>`;
+            }
+            displayElement.innerHTML = paramHtml;
+        }
+
+        // 页面加载完成后执行渲染
+        window.onload = renderParams;
+    </script>
+</body>
+</html>
